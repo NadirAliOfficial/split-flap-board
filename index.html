@@ -154,7 +154,7 @@
       50% { opacity: 0.35; transform: scale(0.85); }
     }
 
-    /* Primary Navigation Modes (Large, Clear, Beautiful) */
+    /* Primary Navigation Modes */
     .mode-switcher {
       display: flex;
       gap: 8px;
@@ -203,7 +203,7 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      padding: 36px 48px;
+      padding: 38px 48px;
       background: var(--chassis-bg);
       border: 3px solid var(--chassis-border);
       border-radius: 28px;
@@ -424,14 +424,12 @@
     .flap-falling {
       z-index: 3;
       transform-origin: bottom center;
-      transition: transform var(--flip-speed, 0.07s) linear;
     }
 
     .flap-rising {
       z-index: 2;
       transform-origin: top center;
       transform: rotateX(90deg);
-      transition: transform var(--flip-speed, 0.07s) cubic-bezier(0.175, 0.885, 0.32, 1.25);
     }
 
     .flap-unit::before, .flap-unit::after {
@@ -897,6 +895,7 @@
        ========================================================================== */
 
     const CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:-/'\"!?#$*&";
+    const DIGIT_SET = "0123456789";
 
     const FLIGHT_SCHEDULES = [
       [
@@ -981,52 +980,53 @@
         this.init();
 
         const now = this.ctx.currentTime;
-        if (now - this.lastClick < 0.007) return;
+        if (now - this.lastClick < 0.01) return;
         this.lastClick = now;
 
         // 1. High transient mechanical snap
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        const randFreq = 1450 + (Math.random() * 350 - 175);
+        const randFreq = 1400 + (Math.random() * 300 - 150);
 
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(randFreq, now);
-        osc.frequency.exponentialRampToValueAtTime(70, now + 0.024);
+        osc.frequency.exponentialRampToValueAtTime(70, now + 0.022);
 
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.024);
+        gain.gain.setValueAtTime(0.045, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
 
         osc.start(now);
-        osc.stop(now + 0.024);
+        osc.stop(now + 0.022);
 
         // 2. Plastic stopper thud
         const thud = this.ctx.createOscillator();
         const thudGain = this.ctx.createGain();
         thud.type = 'sine';
-        thud.frequency.setValueAtTime(150 + (Math.random() * 30 - 15), now);
-        thud.frequency.exponentialRampToValueAtTime(30, now + 0.035);
+        thud.frequency.setValueAtTime(140 + (Math.random() * 30 - 15), now);
+        thud.frequency.exponentialRampToValueAtTime(30, now + 0.032);
 
         thudGain.gain.setValueAtTime(0.05, now);
-        thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+        thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
 
         thud.connect(thudGain);
         thudGain.connect(this.ctx.destination);
 
         thud.start(now);
-        thud.stop(now + 0.035);
+        thud.stop(now + 0.032);
       }
     }
 
     const audio = new SplitFlapAudio();
 
-    // Universal Flap Cell Component (Works for both Matrix and Giant views)
+    // Universal Flap Cell Component
     class FlapUnit {
-      constructor(customClass = '') {
-        this.currentChar = ' ';
-        this.targetChar = ' ';
+      constructor(customClass = '', charSet = CHAR_SET) {
+        this.charSet = charSet;
+        this.currentChar = charSet[0] || ' ';
+        this.targetChar = this.currentChar;
         this.isFlipping = false;
         this.customClass = customClass;
 
@@ -1054,7 +1054,7 @@
         unit.appendChild(this.botRising);
 
         this.el = unit;
-        this.setCharDirect(' ');
+        this.setCharDirect(this.currentChar);
       }
 
       createHalf(className) {
@@ -1062,24 +1062,28 @@
         half.className = `flap-half ${className}`;
         const inner = document.createElement('div');
         inner.className = 'flap-half-inner';
-        inner.innerText = ' ';
+        inner.innerText = this.currentChar;
         half.appendChild(inner);
         return half;
       }
 
       setCharDirect(char) {
-        this.currentChar = char;
-        this.targetChar = char;
-        this.topStatic.firstElementChild.innerText = char;
-        this.botStatic.firstElementChild.innerText = char;
-        this.topFalling.firstElementChild.innerText = char;
-        this.botRising.firstElementChild.innerText = char;
+        const c = String(char).toUpperCase();
+        this.currentChar = c;
+        this.targetChar = c;
+        this.topStatic.firstElementChild.innerText = c;
+        this.botStatic.firstElementChild.innerText = c;
+        this.topFalling.firstElementChild.innerText = c;
+        this.botRising.firstElementChild.innerText = c;
       }
 
-      flipTo(targetChar, speedMs = 65) {
-        this.targetChar = targetChar.toUpperCase();
-        if (this.isFlipping) return;
-        this.stepFlip(speedMs);
+      flipTo(targetChar, speedMs = 150) {
+        const target = String(targetChar).toUpperCase();
+        if (this.currentChar === target && !this.isFlipping) return;
+        this.targetChar = target;
+        if (!this.isFlipping) {
+          this.stepFlip(speedMs);
+        }
       }
 
       stepFlip(speedMs) {
@@ -1089,15 +1093,16 @@
         }
 
         this.isFlipping = true;
-        const curIdx = CHAR_SET.indexOf(this.currentChar);
-        const nextIdx = (curIdx + 1) % CHAR_SET.length;
-        const nextChar = CHAR_SET[nextIdx];
+        const curIdx = this.charSet.indexOf(this.currentChar);
+        const nextIdx = (curIdx >= 0) ? ((curIdx + 1) % this.charSet.length) : 0;
+        const nextChar = this.charSet[nextIdx];
 
         this.topStatic.firstElementChild.innerText = nextChar;
         this.botRising.firstElementChild.innerText = nextChar;
 
-        this.topFalling.style.transition = `transform ${speedMs * 0.5}ms ease-in`;
-        this.botRising.style.transition = `transform ${speedMs * 0.5}ms cubic-bezier(0.175, 0.885, 0.32, 1.25)`;
+        const half = Math.max(30, Math.floor(speedMs * 0.5));
+        this.topFalling.style.transition = `transform ${half}ms ease-in`;
+        this.botRising.style.transition = `transform ${half}ms cubic-bezier(0.2, 0.9, 0.3, 1.2)`;
 
         this.topFalling.style.transform = 'rotateX(-90deg)';
 
@@ -1115,12 +1120,12 @@
             this.botRising.style.transform = 'rotateX(90deg)';
 
             if (this.currentChar !== this.targetChar) {
-              setTimeout(() => this.stepFlip(speedMs), 6);
+              setTimeout(() => this.stepFlip(speedMs), 8);
             } else {
               this.isFlipping = false;
             }
-          }, speedMs * 0.5);
-        }, speedMs * 0.5);
+          }, half);
+        }, half);
       }
     }
 
@@ -1164,7 +1169,7 @@
           const rowUnits = [];
 
           for (let c = 0; c < this.cols; c++) {
-            const unit = new FlapUnit('');
+            const unit = new FlapUnit('', CHAR_SET);
             rowEl.appendChild(unit.el);
             rowUnits.push(unit);
           }
@@ -1176,12 +1181,34 @@
 
       initGiantClock() {
         const slots = ['h1', 'h2', 'm1', 'm2', 's1', 's2'];
+        const now = new Date();
+        let rawH = now.getHours();
+        let displayH = this.timeFormat === '12' ? (rawH % 12 || 12) : rawH;
+        const hStr = String(displayH).padStart(2, '0');
+        const mStr = String(now.getMinutes()).padStart(2, '0');
+        const sStr = String(now.getSeconds()).padStart(2, '0');
+
+        const initialValues = {
+          h1: hStr[0], h2: hStr[1],
+          m1: mStr[0], m2: mStr[1],
+          s1: sStr[0], s2: sStr[1]
+        };
+
         slots.forEach(slot => {
           const container = document.getElementById(`giant-${slot}`);
-          const unit = new FlapUnit('giant-unit');
+          // Giant digits only flip through 0..9 for crisp 1-step ticking!
+          const unit = new FlapUnit('giant-unit', DIGIT_SET);
+          unit.setCharDirect(initialValues[slot]);
           container.appendChild(unit.el);
           this.giantDigits[slot] = unit;
         });
+
+        // Set date text immediately
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+        document.getElementById('giant-day-name').innerText = days[now.getDay()];
+        document.getElementById('giant-date-str').innerText = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')}, ${now.getFullYear()}`;
+        document.getElementById('giant-ampm').innerText = this.timeFormat === '12' ? (rawH >= 12 ? 'PM' : 'AM') : '24H';
       }
 
       initEvents() {
@@ -1301,7 +1328,6 @@
           const now = new Date();
           this.updateClockTick(now);
         }, 1000);
-        this.updateClockTick(new Date());
       }
 
       updateClockTick(now) {
@@ -1312,7 +1338,7 @@
 
         let displayH = rawH;
         if (this.timeFormat === '12') {
-          displayH = rawH % 12 || 12; // 0 becomes 12 at midnight!
+          displayH = rawH % 12 || 12;
         }
 
         const hStr = String(displayH).padStart(2, '0');
@@ -1322,14 +1348,23 @@
         // Header mini indicator
         this.liveTimeMiniEl.innerText = `${hStr}:${mStr}:${sStr} ${this.timeFormat === '12' ? ampm : ''}`;
 
-        // Giant clock update
+        // Giant clock: crisp 1-step second/minute flip
         if (this.mode === 'giant') {
-          this.giantDigits.h1.flipTo(hStr[0], 55);
-          this.giantDigits.h2.flipTo(hStr[1], 55);
-          this.giantDigits.m1.flipTo(mStr[0], 55);
-          this.giantDigits.m2.flipTo(mStr[1], 55);
-          this.giantDigits.s1.flipTo(sStr[0], 45);
-          this.giantDigits.s2.flipTo(sStr[1], 45);
+          // Flip seconds with 1-step 150ms animation
+          this.giantDigits.s2.flipTo(sStr[1], 150);
+          if (s % 10 === 0) {
+            this.giantDigits.s1.flipTo(sStr[0], 150);
+          }
+          if (s === 0) {
+            this.giantDigits.m2.flipTo(mStr[1], 160);
+            if (m % 10 === 0) {
+              this.giantDigits.m1.flipTo(mStr[0], 160);
+            }
+            if (m === 0) {
+              this.giantDigits.h2.flipTo(hStr[1], 160);
+              this.giantDigits.h1.flipTo(hStr[0], 160);
+            }
+          }
 
           document.getElementById('giant-ampm').innerText = this.timeFormat === '12' ? ampm : '24H';
 
@@ -1354,7 +1389,20 @@
           this.giantClockView.classList.remove('hidden');
           this.matrixBoardView.classList.remove('active');
           this.modeLabelEl.innerText = 'Giant Flip Clock';
-          this.updateClockTick(new Date());
+
+          // Ensure digits show exact current time immediately
+          const now = new Date();
+          let rawH = now.getHours();
+          let displayH = this.timeFormat === '12' ? (rawH % 12 || 12) : rawH;
+          const hStr = String(displayH).padStart(2, '0');
+          const mStr = String(now.getMinutes()).padStart(2, '0');
+          const sStr = String(now.getSeconds()).padStart(2, '0');
+          this.giantDigits.h1.setCharDirect(hStr[0]);
+          this.giantDigits.h2.setCharDirect(hStr[1]);
+          this.giantDigits.m1.setCharDirect(mStr[0]);
+          this.giantDigits.m2.setCharDirect(mStr[1]);
+          this.giantDigits.s1.setCharDirect(sStr[0]);
+          this.giantDigits.s2.setCharDirect(sStr[1]);
         } else {
           this.giantClockView.classList.add('hidden');
           this.matrixBoardView.classList.add('active');
@@ -1420,21 +1468,21 @@
         ];
 
         for (let r = 0; r < this.rows; r++) {
-          this.setRowText(r, lines[r], instant ? 0 : r * 120);
+          this.setRowText(r, lines[r], instant ? 0 : r * 100);
         }
       }
 
       renderFlights(idx) {
         const schedule = FLIGHT_SCHEDULES[idx];
         for (let r = 0; r < this.rows; r++) {
-          this.setRowText(r, schedule[r] || '', r * 130);
+          this.setRowText(r, schedule[r] || '', r * 120);
         }
       }
 
       renderQuote(idx) {
         const quote = QUOTES[idx];
         for (let r = 0; r < this.rows; r++) {
-          this.setRowText(r, quote[r] || '', r * 120);
+          this.setRowText(r, quote[r] || '', r * 110);
         }
       }
 
@@ -1465,7 +1513,7 @@
           for (let c = 0; c < this.cols; c++) {
             const unit = this.grid[r][c];
             const targetChar = padded[c] || ' ';
-            const stagger = c * 20;
+            const stagger = c * 18;
             setTimeout(() => {
               unit.flipTo(targetChar, this.speedMs);
             }, stagger);
@@ -1478,7 +1526,7 @@
           const slots = ['h1', 'h2', 'm1', 'm2', 's1', 's2'];
           slots.forEach((s, idx) => {
             const randDigit = String(Math.floor(Math.random() * 10));
-            setTimeout(() => this.giantDigits[s].flipTo(randDigit, 45), idx * 60);
+            setTimeout(() => this.giantDigits[s].flipTo(randDigit, 90), idx * 60);
           });
         } else {
           for (let r = 0; r < this.rows; r++) {
@@ -1487,7 +1535,7 @@
               const randChar = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
               setTimeout(() => {
                 unit.flipTo(randChar, 45);
-              }, (c + r * 2) * 26);
+              }, (c + r * 2) * 24);
             }
           }
         }
