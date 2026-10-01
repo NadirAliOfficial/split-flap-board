@@ -21,9 +21,6 @@
       --border-color: rgba(255, 255, 255, 0.08);
       --text-main: #f1f5f9;
       --text-muted: #64748b;
-      --status-on-time: #10b981;
-      --status-boarding: #f59e0b;
-      --status-delayed: #ef4444;
     }
 
     [data-theme="railway"] {
@@ -94,7 +91,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       padding: 0 4px;
     }
 
@@ -167,6 +164,8 @@
       border-radius: 16px;
       border: 1px solid var(--border-color);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .tab-btn {
@@ -195,26 +194,127 @@
       box-shadow: 0 4px 14px var(--accent-glow);
     }
 
-    /* Solari Chassis Board */
-    .chassis-wrapper {
-      position: relative;
-      max-width: 100%;
+    /* ==========================================================================
+       VIEW 1: GIANT RETRO FLIP CLOCK
+       ========================================================================== */
+    .giant-clock-view {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 36px 48px;
+      background: var(--chassis-bg);
+      border: 3px solid var(--chassis-border);
+      border-radius: 28px;
+      box-shadow: var(--chassis-shadow);
+      position: relative;
+    }
+
+    .giant-date-bar {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .giant-digits-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .giant-unit {
+      position: relative;
+      width: 110px;
+      height: 156px;
+      perspective: 500px;
+      background: #090a0e;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .giant-unit .flap-half-inner {
+      height: 156px;
+      font-size: 116px;
+      line-height: 156px;
+      font-weight: 800;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .giant-unit .flap-bot .flap-half-inner {
+      top: -78px;
+    }
+
+    .giant-colon {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 0 4px;
+    }
+
+    .giant-colon-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .giant-ampm-tag {
+      align-self: flex-end;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    .giant-caption {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       VIEW 2: MULTI-LINE SOLARI MATRIX BOARD
+       ========================================================================== */
+    .matrix-board-view {
+      display: none;
+      position: relative;
+      max-width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .matrix-board-view.active {
+      display: flex;
+    }
+
+    .giant-clock-view.hidden {
+      display: none;
     }
 
     .chassis {
       background: var(--chassis-bg);
       border: 3px solid var(--chassis-border);
       border-radius: 20px;
-      padding: 28px 32px;
+      padding: 26px 30px;
       box-shadow: var(--chassis-shadow);
       position: relative;
       overflow: hidden;
     }
 
-    /* Corner chassis rivets */
     .chassis::before, .chassis::after {
       content: '';
       position: absolute;
@@ -227,7 +327,6 @@
     .chassis::before { top: 12px; left: 12px; }
     .chassis::after { bottom: 12px; right: 12px; }
 
-    /* Optional Header Bar (for flight mode) */
     .board-header-bar {
       display: none;
       grid-template-columns: 88px 1fr 68px 74px 106px;
@@ -246,7 +345,6 @@
       display: grid;
     }
 
-    /* Rows Container */
     .board-grid {
       display: flex;
       flex-direction: column;
@@ -260,7 +358,7 @@
       justify-content: center;
     }
 
-    /* Split-Flap Unit (Cell) */
+    /* Split-Flap Cell Unit */
     .flap-unit {
       position: relative;
       width: 42px;
@@ -271,7 +369,6 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
     }
 
-    /* Top and Bottom Halves */
     .flap-half {
       position: absolute;
       left: 0;
@@ -287,7 +384,7 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 60px; /* full cell height */
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -299,7 +396,6 @@
       line-height: 60px;
     }
 
-    /* Top half */
     .flap-top {
       top: 0;
       border-radius: 5px 5px 0 0;
@@ -313,7 +409,6 @@
       top: 0;
     }
 
-    /* Bottom half */
     .flap-bot {
       bottom: 0;
       border-radius: 0 0 5px 5px;
@@ -323,10 +418,9 @@
     }
 
     .flap-bot .flap-half-inner {
-      top: -30px; /* offset by half height */
+      top: -30px;
     }
 
-    /* 3D Falling Plates */
     .flap-falling {
       z-index: 3;
       transform-origin: bottom center;
@@ -340,7 +434,6 @@
       transition: transform var(--flip-speed, 0.07s) cubic-bezier(0.175, 0.885, 0.32, 1.25);
     }
 
-    /* Side Hinge Notches */
     .flap-unit::before, .flap-unit::after {
       content: '';
       position: absolute;
@@ -474,7 +567,6 @@
       color: #fff;
     }
 
-    /* Keyboard shortcuts guide */
     .info-bar {
       margin-top: 18px;
       font-size: 12px;
@@ -510,8 +602,17 @@
       .flap-bot .flap-half-inner {
         top: -25px;
       }
-      .chassis {
-        padding: 22px 24px;
+      .giant-unit {
+        width: 85px;
+        height: 120px;
+      }
+      .giant-unit .flap-half-inner {
+        height: 120px;
+        font-size: 88px;
+        line-height: 120px;
+      }
+      .giant-unit .flap-bot .flap-half-inner {
+        top: -60px;
       }
     }
 
@@ -534,9 +635,20 @@
       .board-row {
         gap: 3px;
       }
-      .chassis {
-        padding: 16px;
-        border-radius: 14px;
+      .giant-unit {
+        width: 58px;
+        height: 86px;
+      }
+      .giant-unit .flap-half-inner {
+        height: 86px;
+        font-size: 60px;
+        line-height: 86px;
+      }
+      .giant-unit .flap-bot .flap-half-inner {
+        top: -43px;
+      }
+      .giant-clock-view {
+        padding: 22px 24px;
       }
       .mode-switcher {
         flex-wrap: wrap;
@@ -571,8 +683,26 @@
       .board-grid {
         gap: 6px;
       }
-      .chassis {
-        padding: 12px 10px;
+      .giant-unit {
+        width: 38px;
+        height: 56px;
+        border-radius: 6px;
+      }
+      .giant-unit .flap-half-inner {
+        height: 56px;
+        font-size: 38px;
+        line-height: 56px;
+      }
+      .giant-unit .flap-bot .flap-half-inner {
+        top: -28px;
+      }
+      .giant-colon-dot {
+        width: 6px;
+        height: 6px;
+      }
+      .giant-ampm-tag {
+        font-size: 12px;
+        padding: 4px 8px;
       }
     }
   </style>
@@ -587,7 +717,7 @@
     <div class="header-indicators">
       <div class="mode-pill">
         <span class="live-dot"></span>
-        <span id="active-mode-label">Departure Clock</span>
+        <span id="active-mode-label">Giant Flip Clock</span>
       </div>
       <div id="live-time-mini" style="font-feature-settings: 'tnum'; font-variant-numeric: tabular-nums; font-weight: 700;">
         --:--:--
@@ -595,26 +725,29 @@
     </div>
   </header>
 
-  <!-- Clean, intuitive mode tabs right at the top -->
+  <!-- Clear Mode Tabs -->
   <nav class="mode-switcher">
-    <button class="tab-btn active" id="tab-clock">
+    <button class="tab-btn active" id="tab-giant">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-      Clock & Calendar
+      Giant Flip Clock
+    </button>
+    <button class="tab-btn" id="tab-station">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+        <line x1="7" y1="8" x2="17" y2="8"></line>
+        <line x1="7" y1="12" x2="17" y2="12"></line>
+        <line x1="7" y1="16" x2="17" y2="16"></line>
+      </svg>
+      Station Calendar
     </button>
     <button class="tab-btn" id="tab-flights">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
       </svg>
       Flight Board
-    </button>
-    <button class="tab-btn" id="tab-quotes">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2zm13 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2z"></path>
-      </svg>
-      Quotes
     </button>
     <button class="tab-btn" id="tab-composer">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -623,9 +756,56 @@
       </svg>
       Live Typewriter
     </button>
+    <button class="tab-btn" id="tab-quotes">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2zm13 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2z"></path>
+      </svg>
+      Quotes
+    </button>
   </nav>
 
-  <main class="chassis-wrapper">
+  <!-- VIEW 1: GIANT VINTAGE FLIP CLOCK -->
+  <section class="giant-clock-view" id="giant-clock-view">
+    <div class="giant-date-bar">
+      <span id="giant-day-name">FRIDAY</span>
+      <span>•</span>
+      <span id="giant-date-str">OCTOBER 02, 2026</span>
+    </div>
+
+    <div class="giant-digits-row">
+      <!-- Hours (2 digits) -->
+      <div id="giant-h1"></div>
+      <div id="giant-h2"></div>
+
+      <!-- Colon -->
+      <div class="giant-colon">
+        <div class="giant-colon-dot"></div>
+        <div class="giant-colon-dot"></div>
+      </div>
+
+      <!-- Minutes (2 digits) -->
+      <div id="giant-m1"></div>
+      <div id="giant-m2"></div>
+
+      <!-- Colon -->
+      <div class="giant-colon">
+        <div class="giant-colon-dot"></div>
+        <div class="giant-colon-dot"></div>
+      </div>
+
+      <!-- Seconds (2 digits) -->
+      <div id="giant-s1"></div>
+      <div id="giant-s2"></div>
+
+      <!-- AM / PM tag -->
+      <div class="giant-ampm-tag" id="giant-ampm">AM</div>
+    </div>
+
+    <div class="giant-caption">Grand Central Mechanical Timepiece</div>
+  </section>
+
+  <!-- VIEW 2: MULTI-LINE SOLARI BOARD -->
+  <main class="matrix-board-view" id="matrix-board-view">
     <div class="chassis">
       <div class="board-header-bar" id="flight-header">
         <span>Flight</span>
@@ -640,7 +820,7 @@
     </div>
   </main>
 
-  <!-- Interactive Typewriter composer (Instant live typing!) -->
+  <!-- Interactive Live Typewriter Bar -->
   <div class="composer-container" id="composer-area">
     <div class="composer-input-wrapper">
       <input type="text" id="live-input" placeholder="Type here: letters will flip live on the board..." maxlength="132" autocomplete="off" spellcheck="false">
@@ -677,11 +857,10 @@
       </div>
 
       <div class="control-item">
-        <label for="speed-select">Speed</label>
-        <select id="speed-select">
-          <option value="fast">Brisk (45ms)</option>
-          <option value="normal" selected>Normal (65ms)</option>
-          <option value="cinema">Cinematic (100ms)</option>
+        <label for="format-select">Format</label>
+        <select id="format-select">
+          <option value="12" selected>12-Hour (AM/PM)</option>
+          <option value="24">24-Hour</option>
         </select>
       </div>
     </div>
@@ -719,7 +898,6 @@
 
     const CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:-/'\"!?#$*&";
 
-    // Authentic flight schedules
     const FLIGHT_SCHEDULES = [
       [
         "BA 178  LONDON LHR    B12 10:45 ON TIME   ",
@@ -803,11 +981,10 @@
         this.init();
 
         const now = this.ctx.currentTime;
-        // Limit click rate slightly to prevent audio clipping during full-board storms
         if (now - this.lastClick < 0.007) return;
         this.lastClick = now;
 
-        // 1. High-frequency leaf snap
+        // 1. High transient mechanical snap
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         const randFreq = 1450 + (Math.random() * 350 - 175);
@@ -845,14 +1022,13 @@
 
     const audio = new SplitFlapAudio();
 
-    // Individual Cell Flap Unit
+    // Universal Flap Cell Component (Works for both Matrix and Giant views)
     class FlapUnit {
-      constructor(row, col) {
-        this.row = row;
-        this.col = col;
+      constructor(customClass = '') {
         this.currentChar = ' ';
         this.targetChar = ' ';
         this.isFlipping = false;
+        this.customClass = customClass;
 
         this.el = null;
         this.topStatic = null;
@@ -865,9 +1041,7 @@
 
       createDOM() {
         const unit = document.createElement('div');
-        unit.className = 'flap-unit';
-        unit.dataset.row = this.row;
-        unit.dataset.col = this.col;
+        unit.className = `flap-unit ${this.customClass}`;
 
         this.topStatic = this.createHalf('flap-top');
         this.botStatic = this.createHalf('flap-bot');
@@ -925,12 +1099,10 @@
         this.topFalling.style.transition = `transform ${speedMs * 0.5}ms ease-in`;
         this.botRising.style.transition = `transform ${speedMs * 0.5}ms cubic-bezier(0.175, 0.885, 0.32, 1.25)`;
 
-        // Top half drops forward
         this.topFalling.style.transform = 'rotateX(-90deg)';
 
         setTimeout(() => {
           audio.playClick();
-          // Bottom half slaps into place
           this.botRising.style.transform = 'rotateX(0deg)';
 
           setTimeout(() => {
@@ -952,18 +1124,19 @@
       }
     }
 
-    // Main Master Controller
+    // Master Controller
     class MasterBoard {
       constructor(rows = 6, cols = 22) {
         this.rows = rows;
         this.cols = cols;
         this.grid = [];
-        this.mode = 'clock'; // 'clock' (default!), 'flights', 'quotes', 'composer'
+        this.giantDigits = {};
+        this.mode = 'giant'; // 'giant' (default!), 'station', 'flights', 'composer', 'quotes'
+        this.timeFormat = '12';
         this.speedMs = 65;
         this.flightIndex = 0;
         this.quoteIndex = 0;
         this.autoInterval = null;
-        this.clockInterval = null;
         this.lastClockMinute = -1;
 
         this.boardGridEl = document.getElementById('board-grid');
@@ -971,9 +1144,13 @@
         this.modeLabelEl = document.getElementById('active-mode-label');
         this.liveTimeMiniEl = document.getElementById('live-time-mini');
 
+        this.giantClockView = document.getElementById('giant-clock-view');
+        this.matrixBoardView = document.getElementById('matrix-board-view');
+
         this.initDOM();
+        this.initGiantClock();
         this.initEvents();
-        this.setMode('clock');
+        this.setMode('giant');
         this.startClockTimer();
       }
 
@@ -987,7 +1164,7 @@
           const rowUnits = [];
 
           for (let c = 0; c < this.cols; c++) {
-            const unit = new FlapUnit(r, c);
+            const unit = new FlapUnit('');
             rowEl.appendChild(unit.el);
             rowUnits.push(unit);
           }
@@ -997,32 +1174,42 @@
         }
       }
 
+      initGiantClock() {
+        const slots = ['h1', 'h2', 'm1', 'm2', 's1', 's2'];
+        slots.forEach(slot => {
+          const container = document.getElementById(`giant-${slot}`);
+          const unit = new FlapUnit('giant-unit');
+          container.appendChild(unit.el);
+          this.giantDigits[slot] = unit;
+        });
+      }
+
       initEvents() {
-        // Tab buttons
-        const tabClock = document.getElementById('tab-clock');
+        const tabGiant = document.getElementById('tab-giant');
+        const tabStation = document.getElementById('tab-station');
         const tabFlights = document.getElementById('tab-flights');
-        const tabQuotes = document.getElementById('tab-quotes');
         const tabComposer = document.getElementById('tab-composer');
-        const allTabs = [tabClock, tabFlights, tabQuotes, tabComposer];
+        const tabQuotes = document.getElementById('tab-quotes');
+        const allTabs = [tabGiant, tabStation, tabFlights, tabComposer, tabQuotes];
 
         const activateTab = (active) => {
           allTabs.forEach(t => t.classList.remove('active'));
           active.classList.add('active');
         };
 
-        tabClock.addEventListener('click', () => {
-          activateTab(tabClock);
-          this.setMode('clock');
+        tabGiant.addEventListener('click', () => {
+          activateTab(tabGiant);
+          this.setMode('giant');
+        });
+
+        tabStation.addEventListener('click', () => {
+          activateTab(tabStation);
+          this.setMode('station');
         });
 
         tabFlights.addEventListener('click', () => {
           activateTab(tabFlights);
           this.setMode('flights');
-        });
-
-        tabQuotes.addEventListener('click', () => {
-          activateTab(tabQuotes);
-          this.setMode('quotes');
         });
 
         tabComposer.addEventListener('click', () => {
@@ -1031,7 +1218,12 @@
           document.getElementById('live-input').focus();
         });
 
-        // Live Typewriter Input: flips in real-time as you type!
+        tabQuotes.addEventListener('click', () => {
+          activateTab(tabQuotes);
+          this.setMode('quotes');
+        });
+
+        // Live Typewriter Input
         const liveInput = document.getElementById('live-input');
         liveInput.addEventListener('input', (e) => {
           if (this.mode !== 'composer') {
@@ -1053,10 +1245,11 @@
           document.body.dataset.theme = e.target.value;
         });
 
-        // Speed selector
-        document.getElementById('speed-select').addEventListener('change', (e) => {
-          const speeds = { fast: 45, normal: 65, cinema: 100 };
-          this.speedMs = speeds[e.target.value] || 65;
+        // Format selector (12h vs 24h)
+        document.getElementById('format-select').addEventListener('change', (e) => {
+          this.timeFormat = e.target.value;
+          this.updateClockTick(new Date());
+          if (this.mode === 'station') this.renderStationCalendar(new Date(), true);
         });
 
         // Shuffle button
@@ -1106,59 +1299,103 @@
       startClockTimer() {
         setInterval(() => {
           const now = new Date();
-          const h = String(now.getHours() % 12 || 12).padStart(2, '0');
-          const m = String(now.getMinutes()).padStart(2, '0');
-          const s = String(now.getSeconds()).padStart(2, '0');
-          const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-
-          this.liveTimeMiniEl.innerText = `${h}:${m}:${s} ${ampm}`;
-
-          // In clock mode: update when minute flips (or initial render)
-          if (this.mode === 'clock' && now.getMinutes() !== this.lastClockMinute) {
-            this.lastClockMinute = now.getMinutes();
-            this.renderClockBoard(now);
-          }
+          this.updateClockTick(now);
         }, 1000);
+        this.updateClockTick(new Date());
+      }
+
+      updateClockTick(now) {
+        let rawH = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+        const ampm = rawH >= 12 ? 'PM' : 'AM';
+
+        let displayH = rawH;
+        if (this.timeFormat === '12') {
+          displayH = rawH % 12 || 12; // 0 becomes 12 at midnight!
+        }
+
+        const hStr = String(displayH).padStart(2, '0');
+        const mStr = String(m).padStart(2, '0');
+        const sStr = String(s).padStart(2, '0');
+
+        // Header mini indicator
+        this.liveTimeMiniEl.innerText = `${hStr}:${mStr}:${sStr} ${this.timeFormat === '12' ? ampm : ''}`;
+
+        // Giant clock update
+        if (this.mode === 'giant') {
+          this.giantDigits.h1.flipTo(hStr[0], 55);
+          this.giantDigits.h2.flipTo(hStr[1], 55);
+          this.giantDigits.m1.flipTo(mStr[0], 55);
+          this.giantDigits.m2.flipTo(mStr[1], 55);
+          this.giantDigits.s1.flipTo(sStr[0], 45);
+          this.giantDigits.s2.flipTo(sStr[1], 45);
+
+          document.getElementById('giant-ampm').innerText = this.timeFormat === '12' ? ampm : '24H';
+
+          const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+          const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+          document.getElementById('giant-day-name').innerText = days[now.getDay()];
+          document.getElementById('giant-date-str').innerText = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')}, ${now.getFullYear()}`;
+        }
+
+        // Station matrix clock update on minute flip
+        if (this.mode === 'station' && now.getMinutes() !== this.lastClockMinute) {
+          this.lastClockMinute = now.getMinutes();
+          this.renderStationCalendar(now);
+        }
       }
 
       setMode(newMode) {
         this.mode = newMode;
         clearInterval(this.autoInterval);
 
-        if (newMode === 'clock') {
-          this.flightHeaderEl.classList.remove('visible');
-          this.modeLabelEl.innerText = 'Departure Clock';
-          this.lastClockMinute = -1;
-          this.renderClockBoard(new Date(), true);
-        } else if (newMode === 'flights') {
-          this.flightHeaderEl.classList.add('visible');
-          this.modeLabelEl.innerText = 'Airport Departures';
-          this.renderFlights(this.flightIndex);
-          // Cycle flight updates every 20 seconds
-          this.autoInterval = setInterval(() => {
-            this.flightIndex = (this.flightIndex + 1) % FLIGHT_SCHEDULES.length;
+        if (newMode === 'giant') {
+          this.giantClockView.classList.remove('hidden');
+          this.matrixBoardView.classList.remove('active');
+          this.modeLabelEl.innerText = 'Giant Flip Clock';
+          this.updateClockTick(new Date());
+        } else {
+          this.giantClockView.classList.add('hidden');
+          this.matrixBoardView.classList.add('active');
+
+          if (newMode === 'station') {
+            this.flightHeaderEl.classList.remove('visible');
+            this.modeLabelEl.innerText = 'Station Calendar';
+            this.lastClockMinute = -1;
+            this.renderStationCalendar(new Date(), true);
+          } else if (newMode === 'flights') {
+            this.flightHeaderEl.classList.add('visible');
+            this.modeLabelEl.innerText = 'Airport Departures';
             this.renderFlights(this.flightIndex);
-          }, 20000);
-        } else if (newMode === 'quotes') {
-          this.flightHeaderEl.classList.remove('visible');
-          this.modeLabelEl.innerText = 'Inspiration';
-          this.renderQuote(this.quoteIndex);
-          this.autoInterval = setInterval(() => {
-            this.quoteIndex = (this.quoteIndex + 1) % QUOTES.length;
+            this.autoInterval = setInterval(() => {
+              this.flightIndex = (this.flightIndex + 1) % FLIGHT_SCHEDULES.length;
+              this.renderFlights(this.flightIndex);
+            }, 20000);
+          } else if (newMode === 'quotes') {
+            this.flightHeaderEl.classList.remove('visible');
+            this.modeLabelEl.innerText = 'Inspiration';
             this.renderQuote(this.quoteIndex);
-          }, 18000);
-        } else if (newMode === 'composer') {
-          this.flightHeaderEl.classList.remove('visible');
-          this.modeLabelEl.innerText = 'Live Typewriter';
-          const inputVal = document.getElementById('live-input').value.trim();
-          this.renderCustomText(inputVal || 'TYPE ANY MESSAGE...');
+            this.autoInterval = setInterval(() => {
+              this.quoteIndex = (this.quoteIndex + 1) % QUOTES.length;
+              this.renderQuote(this.quoteIndex);
+            }, 18000);
+          } else if (newMode === 'composer') {
+            this.flightHeaderEl.classList.remove('visible');
+            this.modeLabelEl.innerText = 'Live Typewriter';
+            const inputVal = document.getElementById('live-input').value.trim();
+            this.renderCustomText(inputVal || 'TYPE ANY MESSAGE...');
+          }
         }
       }
 
-      /* -------------------------------------------------------------
-         MODE 1: ELEGANT RETRO DEPARTURE CLOCK
-         ------------------------------------------------------------- */
-      renderClockBoard(now, instant = false) {
+      centerLine(text) {
+        const str = text.trim();
+        const pad = Math.max(0, Math.floor((this.cols - str.length) / 2));
+        return ' '.repeat(pad) + str + ' '.repeat(Math.max(0, this.cols - pad - str.length));
+      }
+
+      renderStationCalendar(now, instant = false) {
         const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
         const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
 
@@ -1167,18 +1404,19 @@
         const dateNum = String(now.getDate()).padStart(2, '0');
         const year = now.getFullYear();
 
-        const h = String(now.getHours() % 12 || 12).padStart(2, '0');
+        let rawH = now.getHours();
+        let displayH = this.timeFormat === '12' ? (rawH % 12 || 12) : rawH;
+        const h = String(displayH).padStart(2, '0');
         const m = String(now.getMinutes()).padStart(2, '0');
-        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+        const ampm = this.timeFormat === '12' ? (rawH >= 12 ? 'PM' : 'AM') : '';
 
-        // Clear, readable, iconic vintage railway clock design
         const lines = [
-          `* GRAND CENTRAL TIME *`.padEnd(this.cols, ' '),
-          `  ${dayName}  `.padEnd(this.cols, ' '),
-          `  ${monthName} ${dateNum}, ${year}  `.padEnd(this.cols, ' '),
-          `                      `.padEnd(this.cols, ' '),
-          `     ${h}:${m} ${ampm}     `.padEnd(this.cols, ' '),
-          `  LOCAL STATION CLOCK `.padEnd(this.cols, ' ')
+          this.centerLine('* GRAND CENTRAL TIME *'),
+          this.centerLine(dayName),
+          this.centerLine(`${monthName} ${dateNum}, ${year}`),
+          this.centerLine(''),
+          this.centerLine(`${h}:${m} ${ampm}`.trim()),
+          this.centerLine('LOCAL STATION CLOCK')
         ];
 
         for (let r = 0; r < this.rows; r++) {
@@ -1186,19 +1424,13 @@
         }
       }
 
-      /* -------------------------------------------------------------
-         MODE 2: FLIGHT DEPARTURES BOARD
-         ------------------------------------------------------------- */
       renderFlights(idx) {
         const schedule = FLIGHT_SCHEDULES[idx];
         for (let r = 0; r < this.rows; r++) {
-          this.setRowText(r, schedule[r] || '', r * 140);
+          this.setRowText(r, schedule[r] || '', r * 130);
         }
       }
 
-      /* -------------------------------------------------------------
-         MODE 3: INSPIRATIONAL QUOTES
-         ------------------------------------------------------------- */
       renderQuote(idx) {
         const quote = QUOTES[idx];
         for (let r = 0; r < this.rows; r++) {
@@ -1206,9 +1438,6 @@
         }
       }
 
-      /* -------------------------------------------------------------
-         MODE 4: LIVE TYPEWRITER COMPOSER
-         ------------------------------------------------------------- */
       renderCustomText(text) {
         const clean = text.toUpperCase();
         const words = clean.split(' ');
@@ -1226,11 +1455,7 @@
         }
 
         for (let r = 0; r < this.rows; r++) {
-          // Center the line
-          const line = lines[r];
-          const padding = Math.max(0, Math.floor((this.cols - line.length) / 2));
-          const centered = ' '.repeat(padding) + line;
-          this.setRowText(r, centered.padEnd(this.cols, ' '), 0);
+          this.setRowText(r, this.centerLine(lines[r]), 0);
         }
       }
 
@@ -1249,19 +1474,26 @@
       }
 
       cascadeShuffle() {
-        for (let r = 0; r < this.rows; r++) {
-          for (let c = 0; c < this.cols; c++) {
-            const unit = this.grid[r][c];
-            const randChar = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
-            setTimeout(() => {
-              unit.flipTo(randChar, 45);
-            }, (c + r * 2) * 28);
+        if (this.mode === 'giant') {
+          const slots = ['h1', 'h2', 'm1', 'm2', 's1', 's2'];
+          slots.forEach((s, idx) => {
+            const randDigit = String(Math.floor(Math.random() * 10));
+            setTimeout(() => this.giantDigits[s].flipTo(randDigit, 45), idx * 60);
+          });
+        } else {
+          for (let r = 0; r < this.rows; r++) {
+            for (let c = 0; c < this.cols; c++) {
+              const unit = this.grid[r][c];
+              const randChar = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
+              setTimeout(() => {
+                unit.flipTo(randChar, 45);
+              }, (c + r * 2) * 26);
+            }
           }
         }
       }
     }
 
-    // Launch application
     window.addEventListener('DOMContentLoaded', () => {
       new MasterBoard(6, 22);
     });
