@@ -3,76 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solari Split-Flap Display Board</title>
+  <title>Solari Split-Flap Clock & Board</title>
   <style>
     :root {
-      --bg: #0d0f14;
-      --chassis-bg: #151821;
-      --chassis-border: #222736;
-      --chassis-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), inset 0 2px 4px rgba(255, 255, 255, 0.04);
-      --flap-bg: #12141a;
-      --flap-gradient-top: linear-gradient(180deg, #1e222d 0%, #151720 100%);
-      --flap-gradient-bot: linear-gradient(180deg, #13151d 0%, #0e1017 100%);
-      --flap-text: #f0f3f8;
-      --flap-border: #0a0b0f;
-      --hinge-line: #06070a;
+      --bg: #0b0c10;
+      --chassis-bg: #14161f;
+      --chassis-border: #1e2230;
+      --chassis-shadow: 0 35px 100px rgba(0, 0, 0, 0.9), inset 0 2px 4px rgba(255, 255, 255, 0.05);
+      --flap-top-bg: linear-gradient(180deg, #222634 0%, #161822 100%);
+      --flap-bot-bg: linear-gradient(180deg, #151722 0%, #0e1017 100%);
+      --flap-text: #f8fafc;
+      --flap-border: #090a0e;
+      --hinge-notch: #2b3144;
       --accent: #f59e0b;
       --accent-glow: rgba(245, 158, 11, 0.35);
-      --panel-bg: rgba(21, 24, 33, 0.9);
+      --panel-bg: rgba(20, 22, 31, 0.92);
       --border-color: rgba(255, 255, 255, 0.08);
-      --text-main: #e2e8f0;
+      --text-main: #f1f5f9;
       --text-muted: #64748b;
-      --header-bg: #0a0b0f;
-      --header-text: #f59e0b;
-      --highlight: rgba(255, 255, 255, 0.06);
+      --status-on-time: #10b981;
+      --status-boarding: #f59e0b;
+      --status-delayed: #ef4444;
     }
 
     [data-theme="railway"] {
-      --bg: #14130e;
-      --chassis-bg: #1f1d16;
-      --chassis-border: #332f22;
-      --flap-bg: #181611;
-      --flap-gradient-top: linear-gradient(180deg, #2a261c 0%, #1c1a13 100%);
-      --flap-gradient-bot: linear-gradient(180deg, #181610 0%, #11100b 100%);
-      --flap-text: #ffd13b;
-      --flap-border: #0d0c08;
-      --hinge-line: #070604;
-      --accent: #ffd13b;
-      --accent-glow: rgba(255, 209, 59, 0.35);
-      --header-bg: #292415;
-      --header-text: #ffffff;
+      --bg: #13120d;
+      --chassis-bg: #1c1b14;
+      --chassis-border: #2d2a1e;
+      --flap-top-bg: linear-gradient(180deg, #2c291d 0%, #1d1b13 100%);
+      --flap-bot-bg: linear-gradient(180deg, #1b1912 0%, #11100b 100%);
+      --flap-text: #ffca28;
+      --flap-border: #0a0906;
+      --hinge-notch: #3e3927;
+      --accent: #ffca28;
+      --accent-glow: rgba(255, 202, 40, 0.35);
     }
 
     [data-theme="bronze"] {
-      --bg: #0f1412;
-      --chassis-bg: #16201c;
-      --chassis-border: #23332d;
-      --flap-bg: #101614;
-      --flap-gradient-top: linear-gradient(180deg, #1a2722 0%, #141d19 100%);
-      --flap-gradient-bot: linear-gradient(180deg, #121916 0%, #0d1210 100%);
-      --flap-text: #eae6d9;
-      --flap-border: #0a0e0c;
-      --hinge-line: #050807;
+      --bg: #0e1311;
+      --chassis-bg: #151e1a;
+      --chassis-border: #22302a;
+      --flap-top-bg: linear-gradient(180deg, #1d2b25 0%, #141d19 100%);
+      --flap-bot-bg: linear-gradient(180deg, #121915 0%, #0c110e 100%);
+      --flap-text: #eae5d8;
+      --flap-border: #080c0a;
+      --hinge-notch: #2c3e37;
       --accent: #5eead4;
       --accent-glow: rgba(94, 234, 212, 0.35);
-      --header-bg: #111815;
-      --header-text: #5eead4;
     }
 
     [data-theme="cyber"] {
       --bg: #03060f;
-      --chassis-bg: #070d1e;
+      --chassis-bg: #070e1f;
       --chassis-border: #0e1b3d;
-      --flap-bg: #040814;
-      --flap-gradient-top: linear-gradient(180deg, #0b1530 0%, #060c1d 100%);
-      --flap-gradient-bot: linear-gradient(180deg, #050a19 0%, #030610 100%);
+      --flap-top-bg: linear-gradient(180deg, #0e1d42 0%, #070e22 100%);
+      --flap-bot-bg: linear-gradient(180deg, #060c1d 0%, #030610 100%);
       --flap-text: #00f3ff;
-      --flap-border: #02040a;
-      --hinge-line: #010205;
+      --flap-border: #020409;
+      --hinge-notch: #15295c;
       --accent: #00f3ff;
       --accent-glow: rgba(0, 243, 255, 0.4);
-      --header-bg: #050914;
-      --header-text: #ff007f;
     }
 
     * {
@@ -94,17 +84,17 @@
       justify-content: center;
       padding: 24px;
       overflow-x: hidden;
-      transition: background 0.4s ease, color 0.4s ease;
+      transition: background 0.4s ease;
     }
 
     /* Top Navigation / Brand */
     header {
       width: 100%;
-      max-width: 1120px;
+      max-width: 1080px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       padding: 0 4px;
     }
 
@@ -116,7 +106,7 @@
 
     .brand h1 {
       font-size: 21px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-main);
@@ -127,7 +117,7 @@
       color: var(--text-muted);
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .header-indicators {
@@ -138,7 +128,7 @@
       color: var(--text-muted);
     }
 
-    .live-tag {
+    .mode-pill {
       display: inline-flex;
       align-items: center;
       gap: 7px;
@@ -150,6 +140,7 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       font-weight: 600;
+      color: var(--accent);
     }
 
     .live-dot {
@@ -166,7 +157,45 @@
       50% { opacity: 0.35; transform: scale(0.85); }
     }
 
-    /* Split-Flap Board Chassis */
+    /* Primary Navigation Modes (Large, Clear, Beautiful) */
+    .mode-switcher {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      background: var(--panel-bg);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* Solari Chassis Board */
     .chassis-wrapper {
       position: relative;
       max-width: 100%;
@@ -178,47 +207,46 @@
     .chassis {
       background: var(--chassis-bg);
       border: 3px solid var(--chassis-border);
-      border-radius: 18px;
-      padding: 24px 28px;
+      border-radius: 20px;
+      padding: 28px 32px;
       box-shadow: var(--chassis-shadow);
       position: relative;
       overflow: hidden;
     }
 
-    /* Screws on chassis corners */
+    /* Corner chassis rivets */
     .chassis::before, .chassis::after {
       content: '';
       position: absolute;
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: radial-gradient(circle, #555 40%, #222 100%);
+      background: radial-gradient(circle, #666 40%, #222 100%);
       box-shadow: inset 0 1px 1px #fff, 0 1px 2px rgba(0,0,0,0.8);
     }
-    .chassis::before { top: 10px; left: 10px; }
-    .chassis::after { bottom: 10px; right: 10px; }
+    .chassis::before { top: 12px; left: 12px; }
+    .chassis::after { bottom: 12px; right: 12px; }
 
-    /* Board Header Label Bar */
+    /* Optional Header Bar (for flight mode) */
     .board-header-bar {
-      display: grid;
+      display: none;
       grid-template-columns: 88px 1fr 68px 74px 106px;
       gap: 12px;
       padding: 0 4px 12px 4px;
       border-bottom: 2px solid var(--chassis-border);
       margin-bottom: 16px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--header-text);
-      opacity: 0.9;
+      color: var(--accent);
     }
 
-    .board-header-bar.hidden {
-      display: none;
+    .board-header-bar.visible {
+      display: grid;
     }
 
-    /* Grid of Rows */
+    /* Rows Container */
     .board-grid {
       display: flex;
       flex-direction: column;
@@ -229,17 +257,18 @@
       display: flex;
       gap: 5px;
       align-items: center;
+      justify-content: center;
     }
 
     /* Split-Flap Unit (Cell) */
     .flap-unit {
       position: relative;
-      width: 40px;
-      height: 56px;
+      width: 42px;
+      height: 60px;
       perspective: 350px;
-      background: var(--flap-bg);
+      background: #0a0b0f;
       border-radius: 5px;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
     }
 
     /* Top and Bottom Halves */
@@ -258,25 +287,25 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 56px; /* full unit height */
+      height: 60px; /* full cell height */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
       font-weight: 800;
-      font-size: 38px;
+      font-size: 40px;
       color: var(--flap-text);
       text-transform: uppercase;
-      line-height: 56px;
+      line-height: 60px;
     }
 
     /* Top half */
     .flap-top {
       top: 0;
       border-radius: 5px 5px 0 0;
-      background: var(--flap-gradient-top);
-      border-top: 1px solid var(--highlight);
-      border-bottom: 1px solid var(--hinge-line);
+      background: var(--flap-top-bg);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid #000;
       transform-origin: bottom center;
     }
 
@@ -288,60 +317,110 @@
     .flap-bot {
       bottom: 0;
       border-radius: 0 0 5px 5px;
-      background: var(--flap-gradient-bot);
-      border-top: 1px solid var(--hinge-line);
+      background: var(--flap-bot-bg);
+      border-top: 1px solid #000;
       transform-origin: top center;
     }
 
     .flap-bot .flap-half-inner {
-      top: -28px; /* offset by half height */
+      top: -30px; /* offset by half height */
     }
 
     /* 3D Falling Plates */
     .flap-falling {
       z-index: 3;
       transform-origin: bottom center;
-      transition: transform var(--flip-speed, 0.08s) linear;
+      transition: transform var(--flip-speed, 0.07s) linear;
     }
 
     .flap-rising {
       z-index: 2;
       transform-origin: top center;
       transform: rotateX(90deg);
-      transition: transform var(--flip-speed, 0.08s) linear;
+      transition: transform var(--flip-speed, 0.07s) cubic-bezier(0.175, 0.885, 0.32, 1.25);
     }
 
-    /* Horizontal center hinge line & side notches */
+    /* Side Hinge Notches */
     .flap-unit::before, .flap-unit::after {
       content: '';
       position: absolute;
-      top: calc(50% - 2.5px);
+      top: calc(50% - 3px);
       width: 3px;
-      height: 5px;
-      background: var(--chassis-border);
+      height: 6px;
+      background: var(--hinge-notch);
       z-index: 10;
       border-radius: 1px;
     }
-    .flap-unit::before { left: -1px; }
-    .flap-unit::after { right: -1px; }
+    .flap-unit::before { left: -1.5px; }
+    .flap-unit::after { right: -1.5px; }
 
-    /* Controls Panel */
-    .controls-container {
+    /* Interactive Live Typewriter Bar */
+    .composer-container {
       width: 100%;
-      max-width: 1120px;
-      margin-top: 24px;
-      background: var(--panel-bg);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 16px 22px;
+      max-width: 1080px;
+      margin-top: 16px;
       display: flex;
-      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .composer-input-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .composer-input-wrapper input {
+      width: 100%;
+      padding: 12px 18px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .composer-input-wrapper input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    .composer-btn {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 0 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s ease;
+    }
+
+    .composer-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    /* Bottom Control Bar */
+    .bottom-bar {
+      width: 100%;
+      max-width: 1080px;
+      margin-top: 18px;
+      display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      padding: 0 4px;
     }
 
     .btn-group {
@@ -351,7 +430,7 @@
       flex-wrap: wrap;
     }
 
-    button {
+    .btn-secondary {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
       color: var(--text-main);
@@ -364,95 +443,40 @@
       align-items: center;
       gap: 7px;
       transition: all 0.2s ease;
-      touch-action: manipulation;
     }
 
-    button:hover {
+    .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
       transform: translateY(-1px);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    button.primary {
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      border-color: transparent;
-      box-shadow: 0 4px 14px var(--accent-glow);
-    }
-
-    button.primary:hover {
-      opacity: 0.92;
-      box-shadow: 0 6px 18px var(--accent-glow);
-    }
-
-    button.active {
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      border-color: transparent;
     }
 
     .control-item {
       display: flex;
       align-items: center;
-      gap: 9px;
-      font-size: 13px;
+      gap: 8px;
+      font-size: 12px;
       color: var(--text-muted);
     }
 
-    .control-item label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      font-weight: 600;
-    }
-
-    select, input[type="text"] {
+    select {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 7px 11px;
       border-radius: 9px;
-      font-size: 13px;
+      font-size: 12px;
       outline: none;
       cursor: pointer;
-      transition: border-color 0.2s ease;
-    }
-
-    select:focus, input[type="text"]:focus {
-      border-color: var(--accent);
     }
 
     select option {
-      background: #151821;
+      background: #14161f;
       color: #fff;
     }
 
-    /* Message Input Row */
-    .composer-bar {
-      width: 100%;
-      max-width: 1120px;
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .composer-bar input {
-      flex: 1;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-
-    /* Info Bar & Keyboard Shortcuts */
+    /* Keyboard shortcuts guide */
     .info-bar {
-      margin-top: 16px;
+      margin-top: 18px;
       font-size: 12px;
       color: var(--text-muted);
       display: flex;
@@ -475,56 +499,50 @@
     /* Responsive scaling */
     @media (max-width: 1100px) {
       .flap-unit {
-        width: 32px;
-        height: 46px;
+        width: 34px;
+        height: 50px;
       }
       .flap-half-inner {
-        height: 46px;
-        font-size: 30px;
-        line-height: 46px;
+        height: 50px;
+        font-size: 34px;
+        line-height: 50px;
       }
       .flap-bot .flap-half-inner {
-        top: -23px;
+        top: -25px;
       }
       .chassis {
-        padding: 18px 20px;
-      }
-      .board-header-bar {
-        grid-template-columns: 70px 1fr 54px 58px 84px;
-        font-size: 10px;
+        padding: 22px 24px;
       }
     }
 
     @media (max-width: 860px) {
       body {
-        padding: 12px;
+        padding: 14px;
       }
       .flap-unit {
-        width: 22px;
-        height: 34px;
+        width: 24px;
+        height: 36px;
       }
       .flap-half-inner {
-        height: 34px;
-        font-size: 21px;
-        line-height: 34px;
+        height: 36px;
+        font-size: 23px;
+        line-height: 36px;
       }
       .flap-bot .flap-half-inner {
-        top: -17px;
+        top: -18px;
       }
       .board-row {
         gap: 3px;
       }
       .chassis {
-        padding: 12px 14px;
-        border-radius: 12px;
+        padding: 16px;
+        border-radius: 14px;
       }
-      .board-header-bar {
-        font-size: 8px;
-        grid-template-columns: 50px 1fr 38px 42px 60px;
-        gap: 6px;
-        margin-bottom: 10px;
+      .mode-switcher {
+        flex-wrap: wrap;
+        justify-content: center;
       }
-      .controls-container {
+      .bottom-bar {
         flex-direction: column;
         align-items: stretch;
       }
@@ -535,17 +553,17 @@
 
     @media (max-width: 580px) {
       .flap-unit {
-        width: 14px;
-        height: 23px;
+        width: 14.5px;
+        height: 24px;
         border-radius: 3px;
       }
       .flap-half-inner {
-        height: 23px;
-        font-size: 14px;
-        line-height: 23px;
+        height: 24px;
+        font-size: 15px;
+        line-height: 24px;
       }
       .flap-bot .flap-half-inner {
-        top: -11.5px;
+        top: -12px;
       }
       .board-row {
         gap: 2px;
@@ -553,8 +571,8 @@
       .board-grid {
         gap: 6px;
       }
-      .board-header-bar {
-        display: none;
+      .chassis {
+        padding: 12px 10px;
       }
     }
   </style>
@@ -564,22 +582,52 @@
   <header>
     <div class="brand">
       <h1>Solari Board</h1>
-      <span>Mechanical Split-Flap Display</span>
+      <span>Mechanical Split-Flap System</span>
     </div>
     <div class="header-indicators">
-      <div class="live-tag">
+      <div class="mode-pill">
         <span class="live-dot"></span>
-        <span id="board-status">Departures Live</span>
+        <span id="active-mode-label">Departure Clock</span>
       </div>
-      <div id="live-clock" style="font-feature-settings: 'tnum'; font-variant-numeric: tabular-nums; font-weight: 600;">
+      <div id="live-time-mini" style="font-feature-settings: 'tnum'; font-variant-numeric: tabular-nums; font-weight: 700;">
         --:--:--
       </div>
     </div>
   </header>
 
+  <!-- Clean, intuitive mode tabs right at the top -->
+  <nav class="mode-switcher">
+    <button class="tab-btn active" id="tab-clock">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      Clock & Calendar
+    </button>
+    <button class="tab-btn" id="tab-flights">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+      </svg>
+      Flight Board
+    </button>
+    <button class="tab-btn" id="tab-quotes">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2zm13 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 6-4 6v2z"></path>
+      </svg>
+      Quotes
+    </button>
+    <button class="tab-btn" id="tab-composer">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+        <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"></path>
+      </svg>
+      Live Typewriter
+    </button>
+  </nav>
+
   <main class="chassis-wrapper">
     <div class="chassis">
-      <div class="board-header-bar" id="header-bar">
+      <div class="board-header-bar" id="flight-header">
         <span>Flight</span>
         <span>Destination</span>
         <span>Gate</span>
@@ -587,25 +635,37 @@
         <span>Remarks</span>
       </div>
       <div class="board-grid" id="board-grid">
-        <!-- 6 rows x 22 columns of mechanical split-flap units -->
+        <!-- 6 rows x 22 columns of physical split-flap cells -->
       </div>
     </div>
   </main>
 
-  <div class="composer-bar">
-    <input type="text" id="custom-input" placeholder="Type a custom announcement or message..." maxlength="132">
-    <button class="primary" id="btn-cascade">Cascade Message</button>
+  <!-- Interactive Typewriter composer (Instant live typing!) -->
+  <div class="composer-container" id="composer-area">
+    <div class="composer-input-wrapper">
+      <input type="text" id="live-input" placeholder="Type here: letters will flip live on the board..." maxlength="132" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="composer-btn" id="btn-cascade">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
+      Cascade Flip
+    </button>
   </div>
 
-  <div class="controls-container">
+  <div class="bottom-bar">
     <div class="btn-group">
-      <button id="btn-mode-departures" class="active">Airport Departures</button>
-      <button id="btn-mode-clock">Departure Clock</button>
-      <button id="btn-mode-quotes">Quotes</button>
-      <button id="btn-shuffle" title="Mechanical cascade shuffle">Shuffle All</button>
-    </div>
+      <button class="btn-secondary" id="btn-shuffle" title="Cascade shuffle all flaps">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 3 21 3 21 8"></polyline>
+          <line x1="4" y1="20" x2="21" y2="3"></line>
+          <polyline points="21 16 21 21 16 21"></polyline>
+          <line x1="15" y1="15" x2="21" y2="21"></line>
+          <line x1="4" y1="4" x2="9" y2="9"></line>
+        </svg>
+        Shuffle
+      </button>
 
-    <div class="btn-group">
       <div class="control-item">
         <label for="theme-select">Theme</label>
         <select id="theme-select">
@@ -616,39 +676,50 @@
         </select>
       </div>
 
-      <button id="btn-sound" class="active" title="Toggle mechanical flap audio">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="control-item">
+        <label for="speed-select">Speed</label>
+        <select id="speed-select">
+          <option value="fast">Brisk (45ms)</option>
+          <option value="normal" selected>Normal (65ms)</option>
+          <option value="cinema">Cinematic (100ms)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn-secondary active" id="btn-sound" title="Toggle mechanical audio">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
         Sound On
       </button>
 
-      <button id="btn-fullscreen" title="Fullscreen view">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button class="btn-secondary" id="btn-fullscreen" title="Toggle fullscreen view">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
+        Fullscreen
       </button>
     </div>
   </div>
 
   <div class="info-bar">
     <span><kbd class="kbd-tag">Space</kbd> Shuffle Cascade</span>
-    <span><kbd class="kbd-tag">T</kbd> Cycle Theme</span>
+    <span><kbd class="kbd-tag">T</kbd> Next Theme</span>
     <span><kbd class="kbd-tag">M</kbd> Mute / Unmute</span>
     <span><kbd class="kbd-tag">F</kbd> Fullscreen</span>
-    <span>Inspired by Solari di Udine</span>
+    <span>Mechanical Solari di Udine Simulation</span>
   </div>
 
   <script>
     /* ==========================================================================
-       MECHANICAL SOLARI SPLIT-FLAP DISPLAY ENGINE
+       MECHANICAL SOLARI SPLIT-FLAP SYSTEM
        ========================================================================== */
 
-    // Full mechanical character wheel in order
     const CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:-/'\"!?#$*&";
 
-    // Flight schedule database
+    // Authentic flight schedules
     const FLIGHT_SCHEDULES = [
       [
         "BA 178  LONDON LHR    B12 10:45 ON TIME   ",
@@ -676,7 +747,6 @@
       ]
     ];
 
-    // Famous Quotes
     const QUOTES = [
       [
         "  NOT ALL THOSE WHO   ",
@@ -704,12 +774,12 @@
       ]
     ];
 
-    // Mechanical Audio Engine
+    // Procedural Mechanical Sound Synthesizer
     class SplitFlapAudio {
       constructor() {
         this.ctx = null;
         this.enabled = true;
-        this.lastClickTime = 0;
+        this.lastClick = 0;
       }
 
       init() {
@@ -728,41 +798,41 @@
         return this.enabled;
       }
 
-      playFlapClick() {
+      playClick() {
         if (!this.enabled) return;
         this.init();
 
         const now = this.ctx.currentTime;
-        // Limit max clicks per second to prevent audio clipping on massive cascade
-        if (now - this.lastClickTime < 0.008) return;
-        this.lastClickTime = now;
+        // Limit click rate slightly to prevent audio clipping during full-board storms
+        if (now - this.lastClick < 0.007) return;
+        this.lastClick = now;
 
-        // 1. High transient mechanical snap
+        // 1. High-frequency leaf snap
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        const freqRand = 1400 + (Math.random() * 400 - 200);
+        const randFreq = 1450 + (Math.random() * 350 - 175);
 
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freqRand, now);
-        osc.frequency.exponentialRampToValueAtTime(80, now + 0.025);
+        osc.frequency.setValueAtTime(randFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(70, now + 0.024);
 
-        gain.gain.setValueAtTime(0.045, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.024);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
 
         osc.start(now);
-        osc.stop(now + 0.025);
+        osc.stop(now + 0.024);
 
-        // 2. Low thud of plastic leaf slapping stop tab
+        // 2. Plastic stopper thud
         const thud = this.ctx.createOscillator();
         const thudGain = this.ctx.createGain();
         thud.type = 'sine';
-        thud.frequency.setValueAtTime(160 + (Math.random() * 40 - 20), now);
+        thud.frequency.setValueAtTime(150 + (Math.random() * 30 - 15), now);
         thud.frequency.exponentialRampToValueAtTime(30, now + 0.035);
 
-        thudGain.gain.setValueAtTime(0.06, now);
+        thudGain.gain.setValueAtTime(0.05, now);
         thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
 
         thud.connect(thudGain);
@@ -775,7 +845,7 @@
 
     const audio = new SplitFlapAudio();
 
-    // Single Split-Flap Cell Unit
+    // Individual Cell Flap Unit
     class FlapUnit {
       constructor(row, col) {
         this.row = row;
@@ -799,11 +869,8 @@
         unit.dataset.row = this.row;
         unit.dataset.col = this.col;
 
-        // Static top and bottom
         this.topStatic = this.createHalf('flap-top');
         this.botStatic = this.createHalf('flap-bot');
-
-        // Dynamic 3D falling plates
         this.topFalling = this.createHalf('flap-top flap-falling');
         this.botRising = this.createHalf('flap-bot flap-rising');
 
@@ -835,7 +902,7 @@
         this.botRising.firstElementChild.innerText = char;
       }
 
-      flipTo(targetChar, speedMs = 70) {
+      flipTo(targetChar, speedMs = 65) {
         this.targetChar = targetChar.toUpperCase();
         if (this.isFlipping) return;
         this.stepFlip(speedMs);
@@ -852,37 +919,31 @@
         const nextIdx = (curIdx + 1) % CHAR_SET.length;
         const nextChar = CHAR_SET[nextIdx];
 
-        // Prepare next plate
         this.topStatic.firstElementChild.innerText = nextChar;
         this.botRising.firstElementChild.innerText = nextChar;
 
         this.topFalling.style.transition = `transform ${speedMs * 0.5}ms ease-in`;
-        this.botRising.style.transition = `transform ${speedMs * 0.5}ms ease-out`;
+        this.botRising.style.transition = `transform ${speedMs * 0.5}ms cubic-bezier(0.175, 0.885, 0.32, 1.25)`;
 
-        // 1. Top falls forward 90deg
+        // Top half drops forward
         this.topFalling.style.transform = 'rotateX(-90deg)';
 
         setTimeout(() => {
-          // Play mechanical click
-          audio.playFlapClick();
-
-          // 2. Bottom rises into view from 90deg to 0deg
+          audio.playClick();
+          // Bottom half slaps into place
           this.botRising.style.transform = 'rotateX(0deg)';
 
           setTimeout(() => {
-            // Settle on next character
             this.currentChar = nextChar;
             this.setCharDirect(nextChar);
 
-            // Reset 3D transforms without transition
             this.topFalling.style.transition = 'none';
             this.botRising.style.transition = 'none';
             this.topFalling.style.transform = 'rotateX(0deg)';
             this.botRising.style.transform = 'rotateX(90deg)';
 
-            // Continue stepping toward target
             if (this.currentChar !== this.targetChar) {
-              setTimeout(() => this.stepFlip(speedMs), 8);
+              setTimeout(() => this.stepFlip(speedMs), 6);
             } else {
               this.isFlipping = false;
             }
@@ -891,27 +952,29 @@
       }
     }
 
-    // Board Controller
-    class SolariBoard {
+    // Main Master Controller
+    class MasterBoard {
       constructor(rows = 6, cols = 22) {
         this.rows = rows;
         this.cols = cols;
         this.grid = [];
-        this.mode = 'departures'; // 'departures', 'clock', 'quotes', 'custom'
-        this.scheduleIndex = 0;
+        this.mode = 'clock'; // 'clock' (default!), 'flights', 'quotes', 'composer'
+        this.speedMs = 65;
+        this.flightIndex = 0;
         this.quoteIndex = 0;
-        this.cycleInterval = null;
+        this.autoInterval = null;
         this.clockInterval = null;
+        this.lastClockMinute = -1;
 
         this.boardGridEl = document.getElementById('board-grid');
-        this.headerBarEl = document.getElementById('header-bar');
-        this.statusTextEl = document.getElementById('board-status');
-        this.liveClockEl = document.getElementById('live-clock');
+        this.flightHeaderEl = document.getElementById('flight-header');
+        this.modeLabelEl = document.getElementById('active-mode-label');
+        this.liveTimeMiniEl = document.getElementById('live-time-mini');
 
         this.initDOM();
         this.initEvents();
-        this.setMode('departures');
-        this.startLiveClock();
+        this.setMode('clock');
+        this.startClockTimer();
       }
 
       initDOM() {
@@ -935,57 +998,70 @@
       }
 
       initEvents() {
+        // Tab buttons
+        const tabClock = document.getElementById('tab-clock');
+        const tabFlights = document.getElementById('tab-flights');
+        const tabQuotes = document.getElementById('tab-quotes');
+        const tabComposer = document.getElementById('tab-composer');
+        const allTabs = [tabClock, tabFlights, tabQuotes, tabComposer];
+
+        const activateTab = (active) => {
+          allTabs.forEach(t => t.classList.remove('active'));
+          active.classList.add('active');
+        };
+
+        tabClock.addEventListener('click', () => {
+          activateTab(tabClock);
+          this.setMode('clock');
+        });
+
+        tabFlights.addEventListener('click', () => {
+          activateTab(tabFlights);
+          this.setMode('flights');
+        });
+
+        tabQuotes.addEventListener('click', () => {
+          activateTab(tabQuotes);
+          this.setMode('quotes');
+        });
+
+        tabComposer.addEventListener('click', () => {
+          activateTab(tabComposer);
+          this.setMode('composer');
+          document.getElementById('live-input').focus();
+        });
+
+        // Live Typewriter Input: flips in real-time as you type!
+        const liveInput = document.getElementById('live-input');
+        liveInput.addEventListener('input', (e) => {
+          if (this.mode !== 'composer') {
+            activateTab(tabComposer);
+            this.setMode('composer');
+          }
+          this.renderCustomText(e.target.value);
+        });
+
+        document.getElementById('btn-cascade').addEventListener('click', () => {
+          const text = liveInput.value.trim() || 'WELCOME TO SOLARI';
+          activateTab(tabComposer);
+          this.setMode('composer');
+          this.renderCustomText(text);
+        });
+
         // Theme selector
         document.getElementById('theme-select').addEventListener('change', (e) => {
           document.body.dataset.theme = e.target.value;
         });
 
-        // Mode buttons
-        const btnDep = document.getElementById('btn-mode-departures');
-        const btnClock = document.getElementById('btn-mode-clock');
-        const btnQuotes = document.getElementById('btn-mode-quotes');
-
-        const setBtn = (activeBtn) => {
-          [btnDep, btnClock, btnQuotes].forEach(b => b.classList.remove('active'));
-          activeBtn.classList.add('active');
-        };
-
-        btnDep.addEventListener('click', () => {
-          setBtn(btnDep);
-          this.setMode('departures');
-        });
-
-        btnClock.addEventListener('click', () => {
-          setBtn(btnClock);
-          this.setMode('clock');
-        });
-
-        btnQuotes.addEventListener('click', () => {
-          setBtn(btnQuotes);
-          this.setMode('quotes');
+        // Speed selector
+        document.getElementById('speed-select').addEventListener('change', (e) => {
+          const speeds = { fast: 45, normal: 65, cinema: 100 };
+          this.speedMs = speeds[e.target.value] || 65;
         });
 
         // Shuffle button
         document.getElementById('btn-shuffle').addEventListener('click', () => {
           this.cascadeShuffle();
-        });
-
-        // Custom Message Cascade
-        const customInput = document.getElementById('custom-input');
-        const btnCascade = document.getElementById('btn-cascade');
-
-        const submitCustom = () => {
-          const text = customInput.value.trim();
-          if (text) {
-            setBtn(btnDep);
-            [btnDep, btnClock, btnQuotes].forEach(b => b.classList.remove('active'));
-            this.setMode('custom', text);
-          }
-        };
-
-        btnCascade.addEventListener('click', submitCustom);
-        customInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') submitCustom();
         });
 
         // Sound button
@@ -994,8 +1070,8 @@
           const isNowOn = audio.toggle();
           btnSound.classList.toggle('active', isNowOn);
           btnSound.innerHTML = isNowOn
-            ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Sound On`
-            : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg> Sound Off`;
+            ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Sound On`
+            : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg> Sound Off`;
         });
 
         // Fullscreen
@@ -1027,71 +1103,113 @@
         });
       }
 
-      startLiveClock() {
+      startClockTimer() {
         setInterval(() => {
           const now = new Date();
           const h = String(now.getHours() % 12 || 12).padStart(2, '0');
           const m = String(now.getMinutes()).padStart(2, '0');
           const s = String(now.getSeconds()).padStart(2, '0');
           const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-          this.liveClockEl.innerText = `${h}:${m}:${s} ${ampm}`;
 
-          if (this.mode === 'clock') {
+          this.liveTimeMiniEl.innerText = `${h}:${m}:${s} ${ampm}`;
+
+          // In clock mode: update when minute flips (or initial render)
+          if (this.mode === 'clock' && now.getMinutes() !== this.lastClockMinute) {
+            this.lastClockMinute = now.getMinutes();
             this.renderClockBoard(now);
           }
         }, 1000);
       }
 
-      setMode(newMode, customText = '') {
+      setMode(newMode) {
         this.mode = newMode;
-        clearInterval(this.cycleInterval);
+        clearInterval(this.autoInterval);
 
-        if (newMode === 'departures') {
-          this.headerBarEl.classList.remove('hidden');
-          this.statusTextEl.innerText = 'Departures Live';
-          this.renderSchedule(this.scheduleIndex);
-          // Auto rotate flight updates every 25 seconds
-          this.cycleInterval = setInterval(() => {
-            this.scheduleIndex = (this.scheduleIndex + 1) % FLIGHT_SCHEDULES.length;
-            this.renderSchedule(this.scheduleIndex);
-          }, 25000);
-        } else if (newMode === 'clock') {
-          this.headerBarEl.classList.add('hidden');
-          this.statusTextEl.innerText = 'Departure Clock';
+        if (newMode === 'clock') {
+          this.flightHeaderEl.classList.remove('visible');
+          this.modeLabelEl.innerText = 'Departure Clock';
+          this.lastClockMinute = -1;
           this.renderClockBoard(new Date(), true);
+        } else if (newMode === 'flights') {
+          this.flightHeaderEl.classList.add('visible');
+          this.modeLabelEl.innerText = 'Airport Departures';
+          this.renderFlights(this.flightIndex);
+          // Cycle flight updates every 20 seconds
+          this.autoInterval = setInterval(() => {
+            this.flightIndex = (this.flightIndex + 1) % FLIGHT_SCHEDULES.length;
+            this.renderFlights(this.flightIndex);
+          }, 20000);
         } else if (newMode === 'quotes') {
-          this.headerBarEl.classList.add('hidden');
-          this.statusTextEl.innerText = 'Inspiring Words';
+          this.flightHeaderEl.classList.remove('visible');
+          this.modeLabelEl.innerText = 'Inspiration';
           this.renderQuote(this.quoteIndex);
-          this.cycleInterval = setInterval(() => {
+          this.autoInterval = setInterval(() => {
             this.quoteIndex = (this.quoteIndex + 1) % QUOTES.length;
             this.renderQuote(this.quoteIndex);
           }, 18000);
-        } else if (newMode === 'custom') {
-          this.headerBarEl.classList.add('hidden');
-          this.statusTextEl.innerText = 'Announcement';
-          this.renderCustomText(customText);
+        } else if (newMode === 'composer') {
+          this.flightHeaderEl.classList.remove('visible');
+          this.modeLabelEl.innerText = 'Live Typewriter';
+          const inputVal = document.getElementById('live-input').value.trim();
+          this.renderCustomText(inputVal || 'TYPE ANY MESSAGE...');
         }
       }
 
-      renderSchedule(index) {
-        const schedule = FLIGHT_SCHEDULES[index];
+      /* -------------------------------------------------------------
+         MODE 1: ELEGANT RETRO DEPARTURE CLOCK
+         ------------------------------------------------------------- */
+      renderClockBoard(now, instant = false) {
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+
+        const dayName = days[now.getDay()];
+        const monthName = months[now.getMonth()];
+        const dateNum = String(now.getDate()).padStart(2, '0');
+        const year = now.getFullYear();
+
+        const h = String(now.getHours() % 12 || 12).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+        // Clear, readable, iconic vintage railway clock design
+        const lines = [
+          `* GRAND CENTRAL TIME *`.padEnd(this.cols, ' '),
+          `  ${dayName}  `.padEnd(this.cols, ' '),
+          `  ${monthName} ${dateNum}, ${year}  `.padEnd(this.cols, ' '),
+          `                      `.padEnd(this.cols, ' '),
+          `     ${h}:${m} ${ampm}     `.padEnd(this.cols, ' '),
+          `  LOCAL STATION CLOCK `.padEnd(this.cols, ' ')
+        ];
+
         for (let r = 0; r < this.rows; r++) {
-          const rowText = (schedule[r] || '').padEnd(this.cols, ' ');
-          this.setRowText(r, rowText, r * 160);
+          this.setRowText(r, lines[r], instant ? 0 : r * 120);
         }
       }
 
-      renderQuote(index) {
-        const quote = QUOTES[index];
+      /* -------------------------------------------------------------
+         MODE 2: FLIGHT DEPARTURES BOARD
+         ------------------------------------------------------------- */
+      renderFlights(idx) {
+        const schedule = FLIGHT_SCHEDULES[idx];
         for (let r = 0; r < this.rows; r++) {
-          const rowText = (quote[r] || '').padEnd(this.cols, ' ');
-          this.setRowText(r, rowText, r * 140);
+          this.setRowText(r, schedule[r] || '', r * 140);
         }
       }
 
+      /* -------------------------------------------------------------
+         MODE 3: INSPIRATIONAL QUOTES
+         ------------------------------------------------------------- */
+      renderQuote(idx) {
+        const quote = QUOTES[idx];
+        for (let r = 0; r < this.rows; r++) {
+          this.setRowText(r, quote[r] || '', r * 120);
+        }
+      }
+
+      /* -------------------------------------------------------------
+         MODE 4: LIVE TYPEWRITER COMPOSER
+         ------------------------------------------------------------- */
       renderCustomText(text) {
-        // Break text cleanly across 6 rows of 22 characters
         const clean = text.toUpperCase();
         const words = clean.split(' ');
         const lines = ['', '', '', '', '', ''];
@@ -1108,35 +1226,11 @@
         }
 
         for (let r = 0; r < this.rows; r++) {
-          const centered = lines[r].padStart(Math.floor((this.cols + lines[r].length) / 2), ' ').padEnd(this.cols, ' ');
-          this.setRowText(r, centered, r * 140);
-        }
-      }
-
-      renderClockBoard(now, instant = false) {
-        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-        const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-
-        const dayName = days[now.getDay()];
-        const monthName = months[now.getMonth()];
-        const dateNum = now.getDate();
-        const year = now.getFullYear();
-
-        const h = String(now.getHours() % 12 || 12).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-
-        const lines = [
-          `      ${dayName}     `.padEnd(this.cols, ' '),
-          `   ${monthName} ${dateNum}    `.padEnd(this.cols, ' '),
-          `        ${year}        `.padEnd(this.cols, ' '),
-          `                      `.padEnd(this.cols, ' '),
-          `      ${h}:${m} ${ampm}      `.padEnd(this.cols, ' '),
-          `   LOCAL STATION TIME  `.padEnd(this.cols, ' ')
-        ];
-
-        for (let r = 0; r < this.rows; r++) {
-          this.setRowText(r, lines[r], instant ? 0 : r * 100);
+          // Center the line
+          const line = lines[r];
+          const padding = Math.max(0, Math.floor((this.cols - line.length) / 2));
+          const centered = ' '.repeat(padding) + line;
+          this.setRowText(r, centered.padEnd(this.cols, ' '), 0);
         }
       }
 
@@ -1146,9 +1240,9 @@
           for (let c = 0; c < this.cols; c++) {
             const unit = this.grid[r][c];
             const targetChar = padded[c] || ' ';
-            const stagger = c * 28;
+            const stagger = c * 20;
             setTimeout(() => {
-              unit.flipTo(targetChar, 65);
+              unit.flipTo(targetChar, this.speedMs);
             }, stagger);
           }
         }, delayMs);
@@ -1160,16 +1254,16 @@
             const unit = this.grid[r][c];
             const randChar = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
             setTimeout(() => {
-              unit.flipTo(randChar, 50);
-            }, (c + r * 2) * 35);
+              unit.flipTo(randChar, 45);
+            }, (c + r * 2) * 28);
           }
         }
       }
     }
 
-    // Initialize display on load
+    // Launch application
     window.addEventListener('DOMContentLoaded', () => {
-      new SolariBoard(6, 22);
+      new MasterBoard(6, 22);
     });
   </script>
 </body>
